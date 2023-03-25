@@ -16,7 +16,7 @@ const (
 	port     = 5432
 	user     = "postgres"
 	password = "123456"
-	dbname   = "testDb"
+	dbname   = "bookstore"
 )
 
 func Connect() *sql.DB {
