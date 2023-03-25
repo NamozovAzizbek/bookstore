@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	routers "github.com/NamozovAzizbek/movie-mysql-crud/pkg/routes"
+	routers "github.com/NamozovAzizbek/bookstore/pkg/routes"
 	"github.com/gorilla/mux"
 )
 

@@ -11,5 +11,5 @@ var RegisterMovieRouters = func (router *mux.Router)  {
 	router.HandleFunc("/movie", controllers.CreateMovie).Methods("POST")
 	router.HandleFunc("/movie/{id}", controllers.UpdateMovie).Methods("PUT")	
 	router.HandleFunc("/movie/{id}", controllers.DeleteMovie).Methods("DELETE")
-	router.HandleFunc("/sign up", controllers.signUp).Methods("POST")
+
 }
