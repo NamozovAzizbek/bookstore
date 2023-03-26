@@ -29,9 +29,6 @@ func Connect() *sql.DB {
 		log.Println(err)
 	}
 
-	// close database
-	defer db.Close()
-
 	// check db
 	err = db.Ping()
 	if err != nil {
