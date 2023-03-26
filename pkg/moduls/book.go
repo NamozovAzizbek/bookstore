@@ -27,6 +27,13 @@ type Connect struct {
 
 var db = config.Connect()
 
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+}
+
 func GetBookes() []Book {
 
 	var (
@@ -169,54 +176,43 @@ func GetBook(id int) []Book {
 	return bookes
 }
 
-// func (m *Book) Create() *Book {
-// 	//director bor yoki yo'qligini tekshirish uchun
-// 	row, err := db.Query("SELECT id FROM director WHERE lastname = ? and firstname = ?", m.Director.Lastname, m.Director.Firstname)
-// 	var id int
-// 	for row.Next() {
-// 		err = row.Scan(&id)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 	}
-// 	defer row.Close()
-// 	if id == 0 { //agar director mavjud bo'lmasa uni yaratamiz
-// 		row, err := db.Query("INSERT INTO `director`(`firstname`, `lastname`) VALUES(?,?)", m.Director.Firstname, m.Director.Lastname)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 		defer row.Close()
-// 	}
-// 	// director id ni olamiz
-// 	row, err = db.Query("SELECT id FROM director WHERE lastname = ? and firstname = ?", m.Director.Lastname, m.Director.Firstname)
-// 	for row.Next() {
-// 		err = row.Scan(&id)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 	}
-// 	m.DirectorId = id
-// 	res, err := db.Query("INSERT INTO `movie` (`created_at`, `isbn`, `title`, `directorId`) VALUES (NOW(), ?, ?, ?)", m.Isbn, m.Title, id)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer res.Close()
-// 	return m
-// }
+func (b *Book) Create() *Book {
+	var book Book
+	// categoryani aniqlash
+	row, err := db.Query("select id from category where category=$1", b.Category.Book_category)
+	checkError(err)
+	for row.Next() {
+		err = row.Scan(&book.Category.Id)
+		checkError(err)
+	}
+	defer row.Close()
+	if book.Category.Id == 0 {
+		_, err = db.Exec("insert into category(category) values ($1)", b.Category.Book_category)
+		checkError(err)
+	}
+	// category id olindi
+	row, err = db.Query("select id from category where category = $1", b.Category.Book_category)
+	checkError(err)
+	for row.Next() {
+		err = row.Scan(&book.Category.Id)
+		checkError(err)
+	}
 
-// func Delete(id int) *Movie {
-// 	movie := GetMovie(id)
-// 	row, err := db.Query("DELETE FROM movie WHERE movieId = ?", id)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		os.Exit(1)
-// 	}
-// 	defer row.Close()
-// 	return movie
-// }
+	_, err = db.Exec("insert into book(name, author, publication) values ($1, $2, $3)", b.Name, b.Author, b.Publication)
+	checkError(err)
+
+	return b
+}
+
+func Delete(id int) {
+
+	_, err := db.Exec("DELETE FROM book WHERE id = ?", id)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	
+}
 
 // func (m *Movie) Update(id int) *Movie {
 // 	// get directorId

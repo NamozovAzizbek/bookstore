@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/NamozovAzizbek/bookstore/pkg/moduls"
+	"github.com/NamozovAzizbek/bookstore/pkg/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -25,12 +26,12 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(req)
 
 	if err != nil {
-        w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "Invalid product ID")
-        return
-    }
+		return
+	}
 	book := moduls.GetBook(id)
-	if len(book) == 0{
+	if len(book) == 0 {
 		fmt.Fprintf(w, "book not found !")
 		return
 	}
@@ -40,30 +41,28 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-// func CreateMovie(w http.ResponseWriter, r *http.Request) {
-// 	newMovie := &moduls.Movie{}
-// 	utils.ParseBody(r, &newMovie)
-// 	newMovie.Create()
-// 	res, _ := json.Marshal(newMovie)
-// 	w.Header().Set("Content-Type", "pkglication/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write(res)
-// }
+func CreateBook(w http.ResponseWriter, r *http.Request) {
+	newBook := &moduls.Book{}
+	utils.ParseBody(r, &newBook)
+	newBook.Create()
+	res, _ := json.Marshal(newBook)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
 
-// func DeleteMovie(w http.ResponseWriter, r *http.Request) {
-// 	req := mux.Vars(r)["id"]
-// 	id, err := strconv.Atoi(req)
-// 	if err != nil {
-// 		fmt.Println("errror while parsing")
-// 		return
-// 	}
-// 	movie := moduls.Delete(id)
-
-// 	res, _ := json.Marshal(movie)
-// 	w.Header().Set("Content-Type", "pkglication/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write(res)
-// }
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	req := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(req)
+	if err != nil {
+		fmt.Println("errror while parsing")
+		return
+	}
+	moduls.Delete(id)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "deleted successfully")
+}
 
 // func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 // 	req := mux.Vars(r)["id"]
