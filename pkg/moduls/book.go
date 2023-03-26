@@ -206,7 +206,7 @@ func (b *Book) Create() *Book {
 
 func Delete(id int) {
 
-	_, err := db.Exec("DELETE FROM book WHERE id = ?", id)
+	_, err := db.Exec("DELETE FROM book WHERE id = $1", id)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
@@ -214,45 +214,24 @@ func Delete(id int) {
 	
 }
 
-// func (m *Movie) Update(id int) *Movie {
-// 	// get directorId
-// 	directoId := 0
-// 	row, err := db.Query("SELECT id FROM director WHERE lastname = ? and firstname = ?", m.Director.Lastname, m.Director.Firstname)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	for row.Next() {
-// 		err = row.Scan(&directoId)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 	}
-// 	defer row.Close()
-// 	if directoId == 0 {
-// 		//agar director mavjud bo'lmasa uni yaratamiz
-// 		row, err := db.Query("INSERT INTO `director`(`firstname`, `lastname`) VALUES(?,?)", m.Director.Firstname, m.Director.Lastname)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 		defer row.Close()
-// 	}
-// 	// director id ni olamiz
-// 	row, err = db.Query("SELECT id FROM director WHERE lastname = ? and firstname = ?", m.Director.Lastname, m.Director.Firstname)
-// 	for row.Next() {
-// 		err = row.Scan(&directoId)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 			os.Exit(1)
-// 		}
-// 	}
-
-// 	// yangilash update
-// 	row, err = db.Query("UPDATE movie SET title = ?, isbn = ?, directorId = ? where movieId = ?", m.Title, m.Isbn, directoId, id)
-// 	if err != nil {
-// 		return nil
-// 	}
-// 	defer row.Close()
-// 	return m
-// }
+func (b *Book) Update(id int) *Book {
+	// get id book
+	bookId := 0
+	row, err := db.Query("SELECT id FROM book WHERE name = $1 and author = $2 and publication = $3", b.Name, b.Author, b.Publication)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for row.Next(){
+		err = row.Scan(&bookId)
+		checkError(err)
+	}
+	defer row.Close()
+	if bookId == 0{
+		return nil
+	}
+	// yangilash update
+	row, err = db.Query("UPDATE book SET name = 1$, author = $2, publication = $3 where id = ?", b.Name, b.Author, b.Publication, id)
+	checkError(err)
+	defer row.Close()
+	return b
+}

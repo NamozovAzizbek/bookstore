@@ -64,23 +64,24 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "deleted successfully")
 }
 
-// func UpdateMovie(w http.ResponseWriter, r *http.Request) {
-// 	req := mux.Vars(r)["id"]
-// 	id, err := strconv.Atoi(req)
-// 	if err != nil {
-// 		fmt.Println("errror while parsing")
-// 		return
-// 	}
-// 	movie := &moduls.Movie{}
-// 	utils.ParseBody(r, &movie)
-// 	movie.Update(id)
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	req := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(req)
+	if err != nil {
+		fmt.Println("errror while parsing")
+		return
+	}
+	book := &moduls.Book{}
+	utils.ParseBody(r, &book)
+	book.Update(id)
 
-// 	if movie.Update(id) == nil {
-// 		fmt.Fprintf(w, "movie not found")
-// 	} else {
-// 		res, _ := json.Marshal(movie)
-// 		w.Header().Set("Content-Type", "pkglication/json")
-// 		w.WriteHeader(http.StatusOK)
-// 		w.Write(res)
-// 	}
-// }
+	if book.Update(id) == nil {
+		fmt.Fprintf(w, "book not found")
+		return
+	} else {
+		res, _ := json.Marshal(book)
+		w.Header().Set("Content-Type", "pkglication/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(res)
+	}
+}
