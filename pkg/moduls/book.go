@@ -27,17 +27,16 @@ type Connect struct {
 
 var db = config.Connect()
 
-var (
-	categories = make([]Category, 0)
-	bookes     = make([]Book, 0)
-	connect    = make([]Connect, 0)
-	b          Book
-	c          Category
-	conn       Connect
-)
-
 func GetBookes() []Book {
 
+	var (
+		categories = make([]Category, 0)
+		bookes     = make([]Book, 0)
+		connect    = make([]Connect, 0)
+		b          Book
+		c          Category
+		conn       Connect
+	)
 	row, err := db.Query("SELECT * from category")
 	if err != nil {
 		log.Fatal(err)
@@ -100,6 +99,15 @@ func GetBookes() []Book {
 
 func GetBook(id int) []Book {
 
+	var (
+		categories = make([]Category, 0)
+		bookes     = make([]Book, 0)
+		connect    = make([]Connect, 0)
+		b          Book
+		c          Category
+		conn       Connect
+	)
+
 	row, err := db.Query("SELECT * from category")
 	if err != nil {
 		log.Fatal(err)
@@ -137,6 +145,7 @@ func GetBook(id int) []Book {
 		log.Fatalf("book by id query:%v", err)
 		return nil
 	}
+
 	defer row.Close()
 
 	for row.Next() {
@@ -156,6 +165,7 @@ func GetBook(id int) []Book {
 			}
 		}
 	}
+
 	return bookes
 }
 

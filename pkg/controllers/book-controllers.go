@@ -30,6 +30,10 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
         return
     }
 	book := moduls.GetBook(id)
+	if len(book) == 0{
+		fmt.Fprintf(w, "book not found !")
+		return
+	}
 	res, _ := json.Marshal(book)
 	w.Header().Set("Content-Type", "pkglication/json")
 	w.WriteHeader(http.StatusOK)
